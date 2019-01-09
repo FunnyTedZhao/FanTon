@@ -11,8 +11,8 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.9.98",
-	"appid": "touristappid",
+	"libVersion": "2.2.5",
+	"appid": "wxf3ef743cb26d3c1c",
 	"projectname": "FanTon",
 	"condition": {
 		"search": {

@@ -1,8 +1,44 @@
-//index.js
-//获取应用实例
 const app = getApp()
 
+var bmap = require("../../statics/js/bmap-wx.min.js");
+
 Page({
+  data: {
+    ak: "plQv6sGFDpR6fcPy5Ik8TTGxwhAFfxni",
+    location: "",
+    weather: "",
+  },
+  getLocationInfo(ak) {
+    let that = this;
+
+    wx.getLocation({
+      success: function(res) {
+        let BMap = new bmap.BMapWX({
+          ak: ak
+        });
+
+        BMap.weather({
+          location: res.longitude + "," + res.latitude,
+          success: function (data) {
+            const currentWeather = data.originalData.results[0]["weather_data"][0];
+            let currentTemperature = currentWeather.date;
+
+            that.setData({
+              weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")")) + " " + currentWeather.weather
+            });
+            // dayPictureUrl; nightPictureUrl
+          }
+        });
+      }
+    })
+  },
+  onLoad: function () {
+    this.getLocationInfo(this.data.ak);
+  },
+  onShow: function () {}
+})
+
+/* Page({
   data: {
     motto: 'Hello World',
     userInfo: {},
@@ -51,4 +87,4 @@ Page({
       hasUserInfo: true
     })
   }
-})
+}) */

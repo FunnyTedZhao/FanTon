@@ -1,12 +1,43 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/location/location"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#ff9000",
+    "navigationBarTitleText": "FanTon",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#707070",
+    "selectedColor": "#ff9000",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "外卖",
+        "iconPath": "statics/images/icon-fanton.png",
+        "selectedIconPath": "statics/images/icon-fanton-act.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "text": "订单",
+        "iconPath": "statics/images/icon-order.png",
+        "selectedIconPath": "statics/images/icon-order-act.png"
+      },
+      {
+        "pagePath": "pages/location/location",
+        "text": "我的",
+        "iconPath": "statics/images/icon-mine.png",
+        "selectedIconPath": "statics/images/icon-mine-act.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
   }
 }

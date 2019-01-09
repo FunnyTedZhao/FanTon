@@ -1,5 +1,5 @@
 /**index.wxss**/
-.userinfo {
+/* .userinfo {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,4 +18,24 @@
 
 .usermotto {
   margin-top: 200px;
+} */
+
+/* 顶部盒子 */
+.top-box {
+  background-color: #ff9000;
+}
+/* 信息 */
+.top-info {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+.top-info__item.location {
+  flex: 3 1 none;
+}
+.top-info__item.weather {
+  flex: 1 3 none;
+}
+.weather-img {
+  width: 38rpx;
+  height: 38rpx;
 }
