@@ -1,17 +1,33 @@
 const app = getApp()
 
 var bmap = require("../../statics/js/bmap-wx.min.js");
+const { APP_MOOK_ROOT } = require("../../config/rootConfig.js");
+const { BAIDU_AK } = require("../../config/interfaceConfig.js");
 
 Page({
   data: {
-    ak: "plQv6sGFDpR6fcPy5Ik8TTGxwhAFfxni",
+    ak: "",
     location: "",
     weather: "",
+  },
+  getAk() {
+    let that = this;
+    wx.request({
+      url: APP_MOOK_ROOT + BAIDU_AK,
+      success(res) {
+        that.setData({
+          ak: res.data.data
+        });
+
+        that.getLocationInfo(that.data.ak);
+      }
+    })
   },
   getLocationInfo(ak) {
     let that = this;
 
     wx.getLocation({
+      type: "gcj02",
       success: function(res) {
         let BMap = new bmap.BMapWX({
           ak: ak
@@ -19,21 +35,32 @@ Page({
 
         BMap.weather({
           location: res.longitude + "," + res.latitude,
-          success: function (data) {
+          success(data) {
             const currentWeather = data.originalData.results[0]["weather_data"][0];
             let currentTemperature = currentWeather.date;
 
             that.setData({
               weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")")) + " " + currentWeather.weather
             });
-            // dayPictureUrl; nightPictureUrl
           }
         });
+
+        BMap.search({
+          location: res.latitude + "," + res.longitude,
+          radius: 100,
+          query: "酒店$房地产$公司企业$政府机构",
+          scope: 2,
+          success(data) {
+            that.setData({
+              location: data.originalData.results[0].name
+            });
+          }
+        })
       }
     })
   },
   onLoad: function () {
-    this.getLocationInfo(this.data.ak);
+    this.getAk();
   },
   onShow: function () {}
 })
