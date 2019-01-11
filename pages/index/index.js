@@ -1,8 +1,5 @@
 const app = getApp()
-
 var bmap = require("../../statics/js/bmap-wx.min.js")
-const { APP_MOOK_ROOT } = require("../../config/rootConfig.js")
-const { BAIDU_AK } = require("../../config/interfaceConfig.js")
 
 Page({
   data: {
@@ -10,6 +7,7 @@ Page({
     hasLocationInfo: false,
     locationInfo: {},
     weather: "",
+    weatherClass: ""
   },
   getWeatherInfo(ak, lat, lng) {
     let that = this
@@ -22,9 +20,21 @@ Page({
       success(data) {
         const currentWeather = data.originalData.results[0]["weather_data"][0]
         let currentTemperature = currentWeather.date
+        let weatherClass = ""
+        switch (currentWeather.weather) {
+          case "晴":
+            weatherClass = "icon-tianqi-qing"
+            break
+          case "霾":
+            weatherClass = "icon-tianqi-wumai"
+            break
+          default:
+            break
+        }
 
         that.setData({
-          weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")"))
+          weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")")),
+          weatherClass: weatherClass
         })
       }
     })
@@ -36,6 +46,9 @@ Page({
         locationInfo: app.globalData.locationInfo,
         hasLocationInfo: true
       })
+
+      /* 页面事件开始 */
+      this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
     } else {
       // 加入 callback 以防 Page.Load 先于 App.onLaunch 执行
       app.locationInfoReadyCallback = (res, data) => {
@@ -48,11 +61,11 @@ Page({
           },
           hasLocationInfo: true
         })
+
+        /* 页面事件开始 */
+        this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
       }
     }
-
-    /* 页面事件开始 */
-    this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
   },
   onShow: function () {}
 })

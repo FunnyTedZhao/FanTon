@@ -1,4 +1,5 @@
 @import "statics/wxss/weui.wxss";
+@import "statics/wxss/iconfont.wxss";
 
 .container {
   height: 100%;

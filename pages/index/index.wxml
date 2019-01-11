@@ -16,7 +16,10 @@
     <view class="top-box">
       <view class="top-info weui-flex">
         <view class="top-info__item location">{{ locationInfo.location }}</view>
-        <view class="top-info__item weather">{{ weather }}</view>
+        <view class="top-info__item weather">
+          {{ weather }}
+          <text class="iconfont {{ weatherClass }}"></text>
+        </view>
       </view>
       <view class="top-search">
         <button class="weui-btn" type="default">
