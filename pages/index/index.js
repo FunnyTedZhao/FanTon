@@ -1,66 +1,58 @@
 const app = getApp()
 
-var bmap = require("../../statics/js/bmap-wx.min.js");
-const { APP_MOOK_ROOT } = require("../../config/rootConfig.js");
-const { BAIDU_AK } = require("../../config/interfaceConfig.js");
+var bmap = require("../../statics/js/bmap-wx.min.js")
+const { APP_MOOK_ROOT } = require("../../config/rootConfig.js")
+const { BAIDU_AK } = require("../../config/interfaceConfig.js")
 
 Page({
   data: {
     ak: "",
-    location: "",
+    hasLocationInfo: false,
+    locationInfo: {},
     weather: "",
   },
-  getAk() {
-    let that = this;
-    wx.request({
-      url: APP_MOOK_ROOT + BAIDU_AK,
-      success(res) {
-        that.setData({
-          ak: res.data.data
-        });
-
-        that.getLocationInfo(that.data.ak);
-      }
+  getWeatherInfo(ak, lat, lng) {
+    let that = this
+    let BMap = new bmap.BMapWX({
+      ak: ak
     })
-  },
-  getLocationInfo(ak) {
-    let that = this;
 
-    wx.getLocation({
-      type: "gcj02",
-      success: function(res) {
-        let BMap = new bmap.BMapWX({
-          ak: ak
-        });
+    BMap.weather({
+      location: lng + "," + lat,
+      success(data) {
+        const currentWeather = data.originalData.results[0]["weather_data"][0]
+        let currentTemperature = currentWeather.date
 
-        BMap.weather({
-          location: res.longitude + "," + res.latitude,
-          success(data) {
-            const currentWeather = data.originalData.results[0]["weather_data"][0];
-            let currentTemperature = currentWeather.date;
-
-            that.setData({
-              weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")")) + " " + currentWeather.weather
-            });
-          }
-        });
-
-        BMap.search({
-          location: res.latitude + "," + res.longitude,
-          radius: 100,
-          query: "酒店$房地产$公司企业$政府机构",
-          scope: 2,
-          success(data) {
-            that.setData({
-              location: data.originalData.results[0].name
-            });
-          }
+        that.setData({
+          weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")"))
         })
       }
     })
   },
   onLoad: function () {
-    this.getAk();
+    if (app.globalData.locationInfo) {
+      this.setData({
+        ak: app.globalData.ak,
+        locationInfo: app.globalData.locationInfo,
+        hasLocationInfo: true
+      })
+    } else {
+      // 加入 callback 以防 Page.Load 先于 App.onLaunch 执行
+      app.locationInfoReadyCallback = (res, data) => {
+        this.setData({
+          ak: app.globalData.ak,
+          locationInfo: {
+            latitude: res.latitude,
+            longitude: res.longitude,
+            location:data.originalData.results[0].name
+          },
+          hasLocationInfo: true
+        })
+      }
+    }
+
+    /* 页面事件开始 */
+    this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
   },
   onShow: function () {}
 })
@@ -115,3 +107,5 @@ Page({
     })
   }
 }) */
+
+/* 晴 | 多云 | 阴 | 阵雨 | 雷阵雨 | 雷阵雨伴有冰雹 | 雨夹雪 | 小雨 | 中雨 | 大雨 | 暴雨 | 大暴雨 | 特大暴雨 | 阵雪 | 小雪 | 中雪 | 大雪 | 暴雪 | 雾 | 冻雨 | 沙尘暴 | 小雨转中雨 | 中雨转大雨 | 大雨转暴雨 | 暴雨转大暴雨 | 大暴雨转特大暴雨 | 小雪转中雪 | 中雪转大雪 | 大雪转暴雪 | 浮尘 | 扬沙 | 强沙尘暴 | 霾 */

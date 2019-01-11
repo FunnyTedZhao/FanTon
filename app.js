@@ -1,4 +1,7 @@
-//app.js
+var bmap = require("statics/js/bmap-wx.min.js")
+const { APP_MOOK_ROOT } = require("config/rootConfig.js")
+const { BAIDU_AK } = require("config/interfaceConfig.js")
+
 App({
   onLaunch: function () {
     // 展示本地存储能力
@@ -7,13 +10,13 @@ App({
     wx.setStorageSync('logs', logs)
 
     // 登录
-    wx.login({
+    /* wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
-    })
+    }) */
     // 获取用户信息
-    wx.getSetting({
+    /* wx.getSetting({
       success: res => {
         if (res.authSetting['scope.userInfo']) {
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
@@ -31,9 +34,60 @@ App({
           })
         }
       }
-    })
+    }) */
+
+    // 获取百度地图ak
+    this.getAk()
   },
   globalData: {
-    userInfo: null
+    // userInfo: null,
+    ak: null,
+    locationInfo: null
+  },
+  // 获取百度地图ak
+  getAk() {
+    let that = this
+    wx.request({
+      url: APP_MOOK_ROOT + BAIDU_AK,
+      success(res) {
+        that.globalData.ak = res.data.data
+
+        that.getLocationInfo(that.globalData.ak)
+      }
+    });
+  },
+  // 获取经纬度及定位信息
+  getLocationInfo(ak) {
+    let that = this
+
+    wx.getLocation({
+      type: "gcj02",
+      success: function (res) {
+        that.globalData.locationInfo = {
+          latitude: res.latitude,
+          longitude: res.longitude
+        }
+
+        // 实例化百度地图API
+        let BMap = new bmap.BMapWX({
+          ak: ak
+        })
+
+        // 获取周边信息
+        BMap.search({
+          location: that.globalData.locationInfo["latitude"] + "," + that.globalData.locationInfo["longitude"],
+          radius: 100,
+          query: "酒店$房地产$公司企业$政府机构",
+          scope: 2,
+          success(data) {
+            that.globalData.locationInfo["location"] = data.originalData.results[0].name
+
+            if (that.locationInfoReadyCallback) {
+              that.locationInfoReadyCallback(res, data)
+            }
+          }
+        })
+      }
+    })
   }
 })

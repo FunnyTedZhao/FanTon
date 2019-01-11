@@ -1,4 +1,3 @@
-// pages/location/location.js
 Page({
 
   /**
