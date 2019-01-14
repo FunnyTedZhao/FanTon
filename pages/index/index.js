@@ -1,5 +1,6 @@
 const app = getApp()
 var bmap = require("../../statics/js/bmap-wx.min.js")
+const WeatherUtil = require("../../utils/weatherUtil.js")
 
 Page({
   data: {
@@ -19,22 +20,10 @@ Page({
       location: lng + "," + lat,
       success(data) {
         const currentWeather = data.originalData.results[0]["weather_data"][0]
-        let currentTemperature = currentWeather.date
-        let weatherClass = ""
-        switch (currentWeather.weather) {
-          case "晴":
-            weatherClass = "icon-tianqi-qing"
-            break
-          case "霾":
-            weatherClass = "icon-tianqi-wumai"
-            break
-          default:
-            break
-        }
 
         that.setData({
-          weather: currentTemperature.substring(currentTemperature.indexOf("：") + 1, currentTemperature.indexOf(")")),
-          weatherClass: weatherClass
+          weather: WeatherUtil.getCurrentTemp(currentWeather.date),
+          weatherClass: WeatherUtil.getIcon(currentWeather.weather)
         })
       }
     })
@@ -120,5 +109,3 @@ Page({
     })
   }
 }) */
-
-/* 晴 | 多云 | 阴 | 阵雨 | 雷阵雨 | 雷阵雨伴有冰雹 | 雨夹雪 | 小雨 | 中雨 | 大雨 | 暴雨 | 大暴雨 | 特大暴雨 | 阵雪 | 小雪 | 中雪 | 大雪 | 暴雪 | 雾 | 冻雨 | 沙尘暴 | 小雨转中雨 | 中雨转大雨 | 大雨转暴雨 | 暴雨转大暴雨 | 大暴雨转特大暴雨 | 小雪转中雪 | 中雪转大雪 | 大雪转暴雪 | 浮尘 | 扬沙 | 强沙尘暴 | 霾 */

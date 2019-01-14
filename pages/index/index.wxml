@@ -15,9 +15,11 @@
   <scroll-view scroll-y>
     <view class="top-box">
       <view class="top-info weui-flex">
-        <view class="top-info__item location">{{ locationInfo.location }}</view>
+        <view class="top-info__item location">
+          <text>{{ locationInfo.location }}</text>
+        </view>
         <view class="top-info__item weather">
-          {{ weather }}
+          <text>{{ weather }}</text>
           <text class="iconfont {{ weatherClass }}"></text>
         </view>
       </view>
