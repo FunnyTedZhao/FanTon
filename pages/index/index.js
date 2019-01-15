@@ -1,6 +1,8 @@
 const app = getApp()
 var bmap = require("../../statics/js/bmap-wx.min.js")
-const WeatherUtil = require("../../utils/weatherUtil.js")
+const util = require("../../utils/util.js")
+const { APP_MOOK_ROOT } = require("../../config/rootConfig.js")
+const { COMMODITY_CLASSIFICATION } = require("../../config/interfaceConfig.js")
 
 Page({
   data: {
@@ -8,7 +10,8 @@ Page({
     hasLocationInfo: false,
     locationInfo: {},
     weather: "",
-    weatherClass: ""
+    weatherClass: "",
+    classification: []
   },
   getWeatherInfo(ak, lat, lng) {
     let that = this
@@ -22,8 +25,19 @@ Page({
         const currentWeather = data.originalData.results[0]["weather_data"][0]
 
         that.setData({
-          weather: WeatherUtil.getCurrentTemp(currentWeather.date),
-          weatherClass: WeatherUtil.getIcon(currentWeather.weather)
+          weather: util.getCurrentTemp(currentWeather.date),
+          weatherClass: util.getWeatherIcon(currentWeather.weather)
+        })
+      }
+    })
+  },
+  getClassification() {
+    let that = this
+    wx.request({
+      url: APP_MOOK_ROOT + COMMODITY_CLASSIFICATION,
+      success(res) {
+        that.setData({
+          classification: util.arrayPartition(res.data.data, 8)
         })
       }
     })
@@ -38,6 +52,7 @@ Page({
 
       /* 页面事件开始 */
       this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
+      this.getClassification()
     } else {
       // 加入 callback 以防 Page.Load 先于 App.onLaunch 执行
       app.locationInfoReadyCallback = (res, data) => {
@@ -53,6 +68,7 @@ Page({
 
         /* 页面事件开始 */
         this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
+        this.getClassification()
       }
     }
   },

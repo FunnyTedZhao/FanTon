@@ -13,22 +13,37 @@
 
 <view class="container">
   <scroll-view scroll-y>
+    <!-- 顶部定位&搜索 -->
     <view class="top-box">
-      <view class="top-info weui-flex">
-        <view class="top-info__item location">
+      <view class="top-info flex-box">
+        <view class="top-info__item flex-item-3 location">
+          <text class="iconfont icon-dingwei"></text>
           <text>{{ locationInfo.location }}</text>
+          <text class="iconfont icon-sanjiao"></text>
         </view>
-        <view class="top-info__item weather">
+        <view class="top-info__item flex-item-1 weather">
           <text>{{ weather }}</text>
           <text class="iconfont {{ weatherClass }}"></text>
         </view>
       </view>
       <view class="top-search">
-        <button class="weui-btn" type="default">
+        <button class="">
           <icon type="search" color="#707070" />
           搜索商家、商品名称
         </button>
       </view>
+    </view>
+
+    <!-- 分类 -->
+    <view class="classification-box">
+      <view class="classification-screen">
+        <view class="classification-screen__wrap flex-box" wx:for="{{ classification }}" wx:key="*this">
+          <view class="classification-screen__item flex-item-1" wx:for="{{ item }}" wx:key="*this" wx:for-item="son">
+            <text>{{ son.name }}</text>
+          </view>
+        </view>
+      </view>
+      <view class="classification-switch"></view>
     </view>
   </scroll-view>
 </view>
