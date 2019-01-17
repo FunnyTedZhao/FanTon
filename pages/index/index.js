@@ -1,8 +1,8 @@
 const app = getApp()
 var bmap = require("../../statics/js/bmap-wx.min.js")
 const util = require("../../utils/util.js")
-const { APP_MOOK_ROOT } = require("../../config/rootConfig.js")
-const { COMMODITY_CLASSIFICATION } = require("../../config/interfaceConfig.js")
+const { APP_MOCK_ROOT } = require("../../config/rootConfig.js")
+const { MOCK_CLASSIFICATION, MOCK_BANNER } = require("../../config/interfaceConfig.js")
 
 Page({
   data: {
@@ -11,7 +11,8 @@ Page({
     locationInfo: {},
     weather: "",
     weatherClass: "",
-    classification: []
+    classification: [],
+    banner: {}
   },
   getWeatherInfo(ak, lat, lng) {
     let that = this
@@ -34,10 +35,23 @@ Page({
   getClassification() {
     let that = this
     wx.request({
-      url: APP_MOOK_ROOT + COMMODITY_CLASSIFICATION,
+      url: APP_MOCK_ROOT + MOCK_CLASSIFICATION,
       success(res) {
         that.setData({
           classification: util.arrayPartition(res.data.data, 8)
+        })
+      }
+    })
+  },
+  getBanner() {
+    let that = this
+    wx.request({
+      url: APP_MOCK_ROOT + MOCK_BANNER,
+      success(res) {
+        that.setData({
+          banner: {
+            image: res.data.data.image
+          }
         })
       }
     })
@@ -53,6 +67,7 @@ Page({
       /* 页面事件开始 */
       this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
       this.getClassification()
+      this.getBanner()
     } else {
       // 加入 callback 以防 Page.Load 先于 App.onLaunch 执行
       app.locationInfoReadyCallback = (res, data) => {
@@ -69,6 +84,7 @@ Page({
         /* 页面事件开始 */
         this.getWeatherInfo(this.data.ak, this.data.locationInfo.latitude, this.data.locationInfo.longitude)
         this.getClassification()
+        this.getBanner()
       }
     }
   },

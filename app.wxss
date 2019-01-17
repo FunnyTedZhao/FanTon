@@ -1,6 +1,12 @@
 @import "statics/wxss/weui.wxss";
 @import "statics/wxss/iconfont.wxss";
 
+/* 主要颜色: #ff9000; #1a1eb2; #00b060; #a65e00; */
+
+page {
+  background-color: #efeff4;
+}
+
 .container {
   height: 100%;
   display: flex;

@@ -36,14 +36,29 @@
 
     <!-- 分类 -->
     <view class="classification-box">
-      <view class="classification-screen">
-        <view class="classification-screen__wrap flex-box" wx:for="{{ classification }}" wx:key="*this">
-          <view class="classification-screen__item flex-item-1" wx:for="{{ item }}" wx:key="*this" wx:for-item="son">
-            <text>{{ son.name }}</text>
-          </view>
-        </view>
-      </view>
-      <view class="classification-switch"></view>
+      <swiper indicator-dots="{{true}}" indicator-color="#b2b2b2" indicator-active-color="#888888">
+        <block wx:for="{{ classification }}" wx:key="*this">
+          <swiper-item>
+            <view class="classification-group">
+              <block wx:for="{{ item }}" wx:key="*this" wx:for-item="son">
+                <view class="classification-item">
+                  <view>
+                    <image style="width: 60rpx; height: 60rpx;" src="{{ son.image }}" mode="aspectFit" />
+                  </view>
+                  <view>
+                    <text>{{ son.name }}</text>
+                  </view>
+                </view>
+              </block>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <!-- Banner -->
+    <view class="banner-box">
+      <image style="width: 750rpx;" src="{{ banner.image }}" mode="widthFix" />
     </view>
   </scroll-view>
 </view>

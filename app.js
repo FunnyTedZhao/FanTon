@@ -1,5 +1,5 @@
 var bmap = require("statics/js/bmap-wx.min.js")
-const { APP_MOOK_ROOT } = require("config/rootConfig.js")
+const { APP_MOCK_ROOT } = require("config/rootConfig.js")
 const { BAIDU_AK } = require("config/interfaceConfig.js")
 
 App({
@@ -48,7 +48,7 @@ App({
   getAk() {
     let that = this
     wx.request({
-      url: APP_MOOK_ROOT + BAIDU_AK,
+      url: APP_MOCK_ROOT + BAIDU_AK,
       success(res) {
         that.globalData.ak = res.data.data
 
